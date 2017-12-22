@@ -28,8 +28,6 @@
             android:label="ToolbarActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".TestActivity">
-        </activity>
         <activity android:name=".MovieDetailActivity"
                   android:theme="@style/MovieDetailActivityTheme">
         </activity>
