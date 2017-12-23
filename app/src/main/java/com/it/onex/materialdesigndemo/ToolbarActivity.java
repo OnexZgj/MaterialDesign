@@ -2,6 +2,7 @@ package com.it.onex.materialdesigndemo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -13,12 +14,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.it.onex.materialdesigndemo.adapter.EndlessRecyclerOnScrollListener;
+import com.it.onex.materialdesigndemo.adapter.LoadMoreAdapter;
 import com.it.onex.materialdesigndemo.bean.Movie;
 import com.it.onex.materialdesigndemo.net.HttpMethods;
 
@@ -36,20 +40,24 @@ public class ToolbarActivity extends AppCompatActivity {
     private SwipeRefreshLayout srlRefresh;
     private RecyclerView mRvList;
     private Toolbar tbAtToolbar;
-    private MyAdapter mAdapter;
+    private LoadMoreAdapter loadMoreAdapter;
+    private Intent intent;
+
+    private int start=0;
+    private int end=20;
+
+    private ArrayList<Movie.SubjectsBean> mMovieList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toolbar);
 
-        //- start ---使用这段代码会出现  label的字体，否则不会出现
-        tbAtToolbar = findViewById(R.id.tb_at_toolbar);
-        //不设置会显示label的属性
-        //也可以在清单文件中进行配置
-//        tbAtToolbar.setTitle(" I am toolbar ");
+        //如果不设置，则不会出现标题
+        Toolbar tbAtToolbar = findViewById(R.id.tb_at_toolbar);
+        //不设置会显示label的属性,也可以在清单文件中进行配置
+//      tbAtToolbar.setTitle(" I am toolbar ");
         setSupportActionBar(tbAtToolbar);
-        //- end -
 
 
         dlAtDrawLayout = findViewById(R.id.dl_at_draw_layout);
@@ -85,85 +93,122 @@ public class ToolbarActivity extends AppCompatActivity {
         mRvList.setLayoutManager(new LinearLayoutManager(this));
 
 
-        initData();
+        srlRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mMovieList.clear();
+                end=20;
+                getNetData(start,end,true);
+            }
+        });
+
+        getNetData(start, end, false);
 
 
+        mRvList.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMoreData() {
+                loadMoreAdapter.setLoadState(loadMoreAdapter.LOADING);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mMovieList.size() < 250) {
+                            getNetData(end,20, false);
+                            end+=20;
+                        } else {
+                            loadMoreAdapter.setLoadState(loadMoreAdapter.LOADING_END);
+                        }
+                    }
+                },2000);
+
+
+
+
+            }
+        });
     }
 
-    private void initData() {
+    private void getNetData(int start, int end, final boolean isRefresh) {
 
         HttpMethods.getInstance().getTopMovie(new Subscriber<Movie>() {
             @Override
             public void onCompleted() {
+                if (isRefresh){
+                    Toast.makeText(ToolbarActivity.this, "刷新完成!", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(ToolbarActivity.this, "更新了20条数据!", Toast.LENGTH_SHORT).show();
+                }
                 srlRefresh.setRefreshing(false);
+                Log.i("ToolTAG", "onCompleted: ");
             }
 
             @Override
             public void onError(Throwable e) {
+                Log.i("ToolTAG", "onError: "+e.getMessage());
                 srlRefresh.setRefreshing(false);
             }
 
             @Override
             public void onNext(Movie movie) {
 
-                mAdapter = new MyAdapter(movie,ToolbarActivity.this);
-                mRvList.setAdapter(mAdapter);
-                initListener(movie);
+                Log.i("ToolTAG", "onNext: "+movie.getSubjects().size());
+
+                if (movie != null) {
+
+                    mMovieList.addAll(movie.getSubjects());
+
+                    if (loadMoreAdapter == null) {
+                        loadMoreAdapter = new LoadMoreAdapter(mMovieList, ToolbarActivity.this);
+                        mRvList.setAdapter(loadMoreAdapter);
+
+                    } else {
+                        loadMoreAdapter.notifyDataSetChanged();
+                    }
+
+                    initItemListener(mMovieList);
+
+                }else {
+                    Toast.makeText(ToolbarActivity.this, "请求数据为空", Toast.LENGTH_SHORT).show();
+                }
+                loadMoreAdapter.setLoadState(loadMoreAdapter.LOADING_COMPLETE);
+
             }
-        },0,30 );
+        }, start, end);
     }
 
-    private void initListener(final Movie movie) {
-        mAdapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
 
-            private Intent intent;
-
+    private void initItemListener(final ArrayList<Movie.SubjectsBean> movie) {
+        loadMoreAdapter.setOnItemClickListener(new LoadMoreAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
-
-
                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         ToolbarActivity.this,
                         view.findViewById(R.id.iv_icon),
                         "basic"
                 );
 
-
                 intent = new Intent(ToolbarActivity.this, MovieDetailActivity.class);
-                intent.putExtra("URL",movie.getSubjects().get(position).getImages().getMedium());
-                intent.putExtra("NAME",movie.getSubjects().get(position).getTitle());
-                startActivity(intent,optionsCompat.toBundle());
+                intent.putExtra("URL", movie.get(position).getImages().getMedium());
+                intent.putExtra("NAME", movie.get(position).getTitle());
+                startActivity(intent, optionsCompat.toBundle());
             }
         });
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.toobalr, menu);
         return true;
     }
 
-
-
-
-
-
-
-
-
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
-
             case android.R.id.home:
                 dlAtDrawLayout.openDrawer(Gravity.START);
                 break;
-
             case R.id.add:
                 Toast.makeText(this, "add", Toast.LENGTH_SHORT).show();
                 break;
@@ -174,7 +219,6 @@ public class ToolbarActivity extends AppCompatActivity {
                 Toast.makeText(this, "setting", Toast.LENGTH_SHORT).show();
                 break;
         }
-
         return true;
     }
 

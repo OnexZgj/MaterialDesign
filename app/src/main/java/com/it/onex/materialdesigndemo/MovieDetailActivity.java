@@ -1,7 +1,7 @@
 package com.it.onex.materialdesigndemo;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +27,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (toolbar!=null){
             toolbar.setTitle(name);
             setSupportActionBar(toolbar);
+
         }
 
 

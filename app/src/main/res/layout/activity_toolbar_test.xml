@@ -9,8 +9,14 @@
     tools:context="com.it.onex.materialdesigndemo.ToolbarActivity">
 
     <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context="com.it.onex.materialdesigndemo.ToolbarActivity">
+
+
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -27,41 +33,13 @@
         </android.support.design.widget.AppBarLayout>
 
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/srl_refresh"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_at_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_at_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-               />
-
-        </android.support.v4.widget.SwipeRefreshLayout>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_at_action"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            android:src="@drawable/add"
-            app:elevation="8dp"/>
-
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
         <!-- 使用popupTheme是为了兼容5.0以下的系统-->
+
     </android.support.design.widget.CoordinatorLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@color/colorPrimary"
-        android:gravity="center"
-        android:text="this is menu"
-        android:textColor="#fff"
-        android:textSize="38sp"/>
-
 
 </android.support.v4.widget.DrawerLayout>

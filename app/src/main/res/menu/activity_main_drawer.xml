@@ -35,4 +35,46 @@
         </menu>
     </item>
 
+    <item android:title="Communicate">
+        <menu>
+            <item
+
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share"/>
+            <item
+
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send"/>
+        </menu>
+    </item>
+
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share"/>
+            <item
+
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send"/>
+        </menu>
+    </item>
+
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share"/>
+            <item
+
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send"/>
+        </menu>
+    </item>
+
+
 </menu>
