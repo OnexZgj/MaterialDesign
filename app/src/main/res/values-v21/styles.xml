@@ -12,5 +12,11 @@
 
     <style name="MovieDetailActivityTheme" parent="AppTheme.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="colorPrimary">@color/white</item>
+    </style>
+
+    <style name="FloatActivityTheme" parent="AppTheme.NoActionBar">
+        <item name="android:statusBarColor">#00000000</item>
+        <item name="colorPrimary">@color/white</item>
     </style>
 </resources>

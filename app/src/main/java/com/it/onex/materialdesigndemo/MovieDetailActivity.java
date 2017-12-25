@@ -2,7 +2,6 @@ package com.it.onex.materialdesigndemo;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,12 +22,12 @@ public class MovieDetailActivity extends AppCompatActivity {
         String name = getIntent().getStringExtra("NAME");
 
         ImageView iv= (ImageView) findViewById(R.id.iv_movie_icon);
-        Toolbar toolbar= (Toolbar) findViewById(R.id.tb_amd_toolbar);
-        if (toolbar!=null){
-            toolbar.setTitle(name);
-            setSupportActionBar(toolbar);
-
-        }
+//        Toolbar toolbar= (Toolbar) findViewById(R.id.tb_amd_toolbar);
+//        if (toolbar!=null){
+//            toolbar.setTitle(name);
+//            setSupportActionBar(toolbar);
+//
+//        }
 
 
         Glide.with(this).load(url).into(iv);

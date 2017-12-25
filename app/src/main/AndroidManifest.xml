@@ -28,8 +28,13 @@
             android:label="ToolbarActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".MovieDetailActivity"
-                  android:theme="@style/MovieDetailActivityTheme">
+        <activity
+            android:name=".MovieDetailActivity"
+            android:theme="@style/MovieDetailActivityTheme">
+        </activity>
+        <activity android:name=".FloatTabActivity"
+            android:theme="@style/FloatActivityTheme"
+            android:label="美团">
         </activity>
     </application>
 
